@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<h4 class="fw-bold mb-4">Dashboard Overview</h4>
+
+<div class="row g-4 mb-4">
+  <div class="col-md-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-body d-flex justify-content-between align-items-center">
+        <div>
+          <small class="text-muted">Total Users</small>
+          <h3 class="fw-bold mb-0">{{ U_Count }}</h3>
+        </div>
+        <i class="bi bi-people-fill fs-1 text-primary"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-body d-flex justify-content-between align-items-center">
+        <div>
+          <small class="text-muted">Total Sweets</small>
+          <h3 class="fw-bold mb-0">{{ Sweets_C }}</h3>
+        </div>
+        <i class="bi bi-bag-heart-fill fs-1 text-success"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-body d-flex justify-content-between align-items-center">
+        <div>
+          <small class="text-muted">Messages</small>
+          <h3 class="fw-bold mb-0">{{ Message }}</h3>
+        </div>
+        <i class="bi bi-envelope-fill fs-1 text-danger"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card shadow-sm border-0">
+  <div class="card-header bg-white fw-semibold d-flex justify-content-between align-items-center">
+    <span>Recent Users</span>
+    <button class="btn btn-sm btn-outline-primary">
+      <i class="bi bi-person-plus"></i> Add User
+    </button>
+  </div>
+
+  <div class="card-body table-responsive">
+    <table class="table align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th class="text-end">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for k in users_all %}
+        <tr>
+          <td class="fw-semibold"> {{ k.full_name }} </td>
+          <td class="fw-semibold"> {{ k.email }}</td>
+          <td class="fw-semibold"> {{ k.mobile }}</td>
+          <td class="text-end">
+            <button class="btn btn-sm btn-outline-primary me-1" title="Edit"
+              data-bs-toggle="modal"
+              data-bs-target="#editUserModal"
+              data-id="{{ k.id }}"
+              data-name="{{ k.full_name }}"
+              data-email="{{ k.email }}"
+              data-phone="{{ k.mobile }}">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <a href="/Delete-Users/{{ k.id }}">
+              <button class="btn btn-sm btn-outline-danger" title="Delete">
+                <i class="bi bi-trash"></i>
+              </button>
+            </a>
+          </td>
+        </tr>
+      {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal fade" id="editUserModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold">Edit User</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <form method="POST" enctype="multipart/form-data" id="editSweetForm">
+        {% csrf_token %}
+
+        <div class="modal-body">
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <label class="form-label">Full Name</label>
+              <input type="text" name="name" id="edit_name" class="form-control">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Email</label>
+              <input type="email" name="email" id="edit_email" class="form-control">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">phone</label>
+              <input type="text" name="phone" id="edit_mobile" class="form-control">
+            </div>
+
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-check-circle"></i> Update User
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const editModal = document.getElementById('editUserModal');
+
+editModal.addEventListener('show.bs.modal', function (event) {
+  const button = event.relatedTarget;
+
+  const id = button.getAttribute('data-id');
+  const name = button.getAttribute('data-name');
+  const price = button.getAttribute('data-email');
+  const stock = button.getAttribute('data-phone');
+
+  document.getElementById('edit_name').value = name;
+  document.getElementById('edit_email').value = price;
+  document.getElementById('edit_mobile').value = stock;
+
+  document.getElementById('editSweetForm').action = `/Edit-Users/${id}`;
+});
+</script>
+
+{% endblock %}

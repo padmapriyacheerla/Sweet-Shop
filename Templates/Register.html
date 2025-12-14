@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register | Sweet Delight</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(120deg, #ffb347, #ff7a18);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .auth-card {
+      border-radius: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card auth-card shadow">
+        <div class="card-body p-4">
+          <h3 class="text-center mb-4 fw-bold text-danger">Create Account</h3>
+          <form action="Register" method="POST">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Full Name</label>
+                <input type="text" name="nm" class="form-control" placeholder="Enter name">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Mobile Number</label>
+                <input type="text" name="mb" class="form-control" placeholder="Enter mobile">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" name="em" class="form-control" placeholder="Enter email">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Password</label>
+              <input type="password" name="pw1" class="form-control" placeholder="Create password">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Confirm Password</label>
+              <input type="password" name="pw2" class="form-control" placeholder="Confirm password">
+            </div>
+            <p style="color: red">{{ Err }}</p>
+            <div class="d-grid mb-3">
+              <button class="btn btn-danger" type="submit">Register</button>
+            </div>
+            <p class="text-center mb-0">
+              Already have an account?
+              <a href="/Login" class="text-danger fw-semibold">Login</a>
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

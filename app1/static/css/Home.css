@@ -1,0 +1,21 @@
+    body {
+      font-family: "Segoe UI", sans-serif;
+    }
+    .hero {
+      background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                  url("https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2") center/cover no-repeat;
+      color: #fff;
+      padding: 120px 0;
+    }
+    .sweet-card img {
+      height: 200px;
+      object-fit: cover;
+    }
+    footer {
+      background: #2c2c2c;
+      color: #ccc;
+    }
+    footer a {
+      color: #f8c146;
+      text-decoration: none;
+    }

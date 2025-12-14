@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}Order List{% endblock %}
+
+{% block content %}
+
+<h4 class="fw-bold mb-4">Order List</h4>
+
+<div class="card shadow-sm border-0">
+  <div class="card-body table-responsive">
+
+    <table class="table align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>User Name</th>
+          <th>Sweet Name</th>
+          <th>Quantity</th>
+          <th>Address</th>
+          <th>Phone</th>
+          <th class="text-end">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+      {% for j in Order %}
+        <tr>
+          <td> {{ j.user }}</td>
+          <td> {{ j.sweet }}</td>
+          <td>{{ j.quantity }}</td>
+          <td>{{ j.address }}</td>
+          <td>{{ j.phone }}</td>
+          <td class="text-end">
+            <button class="btn btn-sm btn-outline-primary me-1" title="View"
+              data-bs-toggle="modal"
+              data-bs-target="#ViewMessageModal"
+              data-id="{{ j.id }}"
+              data-nameq="{{ j.user }}"
+              data-email="{{ j.sweet }}"
+              data-quantity="{{ j.quantity }}"
+              data-address="{{ j.address }}"
+              data-phone="{{ j.phone }}">
+              <i class="bi bi-eye"></i>
+            </button>
+            <a href="Delete-Order/{{ j.id }}">
+              <button class="btn btn-sm btn-outline-danger" title="Delete">
+                <i class="bi bi-trash"></i>
+              </button>
+            </a>
+          </td>
+        </tr>
+
+      {% endfor %}
+
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<div class="modal fade" id="ViewMessageModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold">Edit User</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <form method="POST" enctype="multipart/form-data" id="editSweetForm">
+        {% csrf_token %}
+
+        <div class="modal-body">
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <label class="form-label">Full Name</label>
+              <input type="text" name="name" id="edit_name" class="form-control" disabled>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Sweet Name</label>
+              <input type="email" name="email" id="edit_sweet" class="form-control" disabled>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Quantity</label>
+              <input type="text" name="phone" id="edit_quantity" class="form-control" disabled>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">address</label>
+              <input type="text" name="phone" id="edit_address" class="form-control" disabled>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Phone</label>
+              <input type="text" name="phone" id="edit_phone" class="form-control" disabled>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+<script>
+const editModal = document.getElementById('ViewMessageModal');
+
+editModal.addEventListener('show.bs.modal', function (event) {
+  const button = event.relatedTarget;
+
+  const id = button.getAttribute('data-id');
+  const name = button.getAttribute('data-nameq');
+  const sweet = button.getAttribute('data-email');
+  const stock = button.getAttribute('data-quantity');
+  const address = button.getAttribute('data-address');
+  const phone = button.getAttribute('data-phone');
+
+  document.getElementById('edit_name').value = name;
+  document.getElementById('edit_sweet').value = sweet;
+  document.getElementById('edit_quantity').value = stock;
+  document.getElementById('edit_address').value = address;
+  document.getElementById('edit_phone').value = phone;
+
+  document.getElementById('editSweetForm').action = `/View-Message/${id}`;
+});
+</script>
+
+{% endblock %}

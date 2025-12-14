@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <title>Sweet Delight</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/Home.css' %}"/>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-danger fixed-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="#">Sweet Delight</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        {% if user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="/Menu">Menu</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#contactModal">Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="/Logout">Logout</a></li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="/Register">Register</a></li>
+          <li class="nav-item"><a class="nav-link" href="/Login">Login</a></li>
+	  <li class="nav-item"><a class="nav-link" target="_blank" href="/Admin-Login">Admin Login</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<section class="hero text-center">
+  <div class="container">
+    <h1 class="display-4 fw-bold">Traditional & Premium Sweets</h1>
+    <p class="lead mt-3">Freshly made sweets with authentic taste</p>
+    <a href="#" class="btn btn-warning btn-lg mt-3">Order Now</a>
+  </div>
+</section>
+
+<section class="py-5">
+  <div class="container">
+    <h2 class="text-center mb-5 fw-bold">Our Special Sweets</h2>
+    <div class="row g-4">
+      {% for sweets in Data %}
+        <div class="col-md-4">
+          <div class="card sweet-card shadow-sm">
+            <img src="{{ sweets.Image.url }}" class="card-img-top">
+            <div class="card-body text-center">
+              <h5 class="card-title">{{ sweets.Name }}</h5>
+              <p class="card-text"><strong>Stock: &nbsp;</strong>{{ sweets.Stock }}</p>
+              <p class="card-text"><strong>Category: &nbsp;</strong>{{ sweets.Category }}</p>
+              <p class="card-text"><strong>Price: &nbsp;</strong>{{ sweets.price }}</p>
+              {% if user.is_authenticated %}
+                 <button class="btn btn-warning btn-lg mt-3" data-bs-toggle="modal" data-bs-target="#orderModal"
+                  data-sweetname="{{ sweets.Name }}" data-sweetid="{{ sweets.id }}"
+                  data-price="{{ sweets.price }}" data-stock="{{ sweets.Stock }}">
+                  Order Now
+                  </button>
+              {% else %}
+                <a href="/Login" class="btn btn-warning btn-lg mt-3">Login to Order</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Contact Modal -->
+<div class="modal fade" id="contactModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form id="contactForm" action="Send-Message" method="POST">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title">Contact Us</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control" name="name" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Message</label>
+            <textarea class="form-control" name="message" rows="4" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger w-100">Send Message</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Order Modal -->
+<!-- Order Modal -->
+<div class="modal fade" id="orderModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Place Your Order</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form action="/Submit-Order" method="POST">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Sweet</label>
+              <input type="text" name="sweet_name" id="sweet_name" class="form-control" disabled/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Quantity</label>
+              <input type="number" name="quantity" id="sweet_quantity" class="form-control" required min="1">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Your Address</label>
+              <input type="text" name="address" class="form-control" required>
+            </div>
+            <input type="hidden" name="sweet_id" id="sweet_id">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-success">Submit Order</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<footer class="pt-4 pb-3">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <h5 class="text-warning">Sweet Delight</h5>
+        <p>Serving happiness with every bite since 2005.</p>
+      </div>
+      <div class="col-md-4 mb-3">
+        <h5 class="text-warning">Quick Links</h5>
+        <ul class="list-unstyled">
+          <li><a href="/">Home</a></li>
+          <li><a href="#" data-bs-toggle="modal" data-bs-target="#contactModal">Contact</a></li>
+        </ul>
+      </div>
+      <div class="col-md-4 mb-3">
+        <h5 class="text-warning">Contact</h5>
+        <p>📍 Main Market, India</p>
+        <p>✉ sweetdelight@gmail.com</p>
+      </div>
+    </div>
+    <div class="text-center border-top pt-3 mt-3">
+      <p class="mb-0">&copy; 2025 Sweet Delight. All Rights Reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+const editModal = document.getElementById('orderModal');
+
+editModal.addEventListener('show.bs.modal', function (event) {
+  const button = event.relatedTarget;
+
+  const sweetName = button.getAttribute('data-sweetname');
+  const sweetId = button.getAttribute('data-sweetid');
+  const price = button.getAttribute('data-price');
+  const stock = button.getAttribute('data-stock');
+
+  // Set sweet name and other details dynamically in the modal
+  document.getElementById('sweet_name').value = sweetName;
+  document.getElementById('sweet_quantity').setAttribute('max', stock); // Set max quantity to stock available
+  document.getElementById('sweet_id').value = sweetId;
+
+  // Optionally display the price in the modal (hidden or as needed)
+  // document.getElementById('sweet_price').value = price;
+});
+</script>
+
+</body>
+</html>

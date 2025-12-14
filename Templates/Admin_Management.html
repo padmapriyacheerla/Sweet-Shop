@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Admin Management{% endblock %}
+
+{% block content %}
+
+<h4 class="fw-bold mb-4">Admin Management</h4>
+
+<div class="card shadow-sm border-0 mb-4">
+  <div class="card-header bg-white fw-semibold">
+    Add New Admin
+  </div>
+  <form action="Admin-Register" method="POST">
+    {% csrf_token %}
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Username</label>
+          <input type="text" name="username" class="form-control" placeholder="Enter username">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Email</label>
+          <input type="email" name="email" class="form-control" placeholder="Enter email">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Password</label>
+          <input type="password" name="pw1" class="form-control" placeholder="Password">
+        </div>
+      </div>
+
+      <div class="mt-4 text-end">
+        <button class="btn btn-dark" type="submit">
+          <i class="bi bi-person-plus"></i> Add Admin
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="card shadow-sm border-0">
+  <div class="card-header bg-white fw-semibold">
+    Admin List
+  </div>
+
+  <div class="card-body table-responsive">
+    <table class="table align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>UserName</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th class="text-end">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+      {% for ad in admin %}
+        <tr>
+          <td>{{ ad.username }}</td>
+          <td>{{ ad.email }}</td>
+          <td>
+            <span class="badge bg-success">Admin</span>
+          </td>
+          <td class="text-end">
+            <a href="/Admin-Delete/{{ ad.id }}">
+              <button class="btn btn-sm btn-outline-danger" title="Remove Admin">
+                <i class="bi bi-trash"></i>
+              </button>
+            </a>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
